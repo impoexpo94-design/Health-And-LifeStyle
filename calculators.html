@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Health Calculators | Health & Lifestyle Hub</title>
+  <meta name="description" content="Calculate your BMI, age, and body fat easily.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Health Calculators</h1>
+    <p class="subtitle">Calculate your BMI, age, and body fat percentage</p>
+  </header>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="blog.html">Blog</a>
+    <a href="calculators.html" class="active">Calculators</a>
+    <a href="contact.html">Contact</a>
+    <a href="privacy.html">Privacy</a>
+  </nav>
+  <main>
+    <section>
+      <h2>Age Calculator</h2>
+      <form id="age-form">
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob" required>
+        <button type="submit" class="btn blue">Calculate Age</button>
+      </form>
+      <p id="age-result"></p>
+    </section>
+    <section>
+      <h2>BMI Calculator</h2>
+      <form id="bmi-form">
+        <label for="weight">Weight (kg):</label>
+        <input type="number" id="weight" name="weight" required>
+        <label for="height">Height (cm):</label>
+        <input type="number" id="height" name="height" required>
+        <button type="submit" class="btn yellow">Calculate BMI</button>
+      </form>
+      <p id="bmi-result"></p>
+    </section>
+    <section>
+      <h2>Body Fat Calculator</h2>
+      <form id="fat-form">
+        <label for="waist">Waist (cm):</label>
+        <input type="number" id="waist" name="waist" required>
+        <label for="neck">Neck (cm):</label>
+        <input type="number" id="neck" name="neck" required>
+        <label for="height-fat">Height (cm):</label>
+        <input type="number" id="height-fat" name="height-fat" required>
+        <button type="submit" class="btn red">Calculate Body Fat</button>
+      </form>
+      <p id="fat-result"></p>
+    </section>
+    <script src="calculators.js"></script>
+  </main>
+  <footer>
+    &copy; 2025 Health & Lifestyle Hub
+  </footer>
+</body>
+</html>

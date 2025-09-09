@@ -1,40 +1,790 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Health & Lifestyle Hub - Your source for wellness tips, articles, and essential health calculators.">
-  <title>Health & Lifestyle Hub | Wellness, Articles & Calculators</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Calculators Suite</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+        }
+
+        .tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding: 5px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            border-radius: 50px;
+            text-align: center;
+            flex: 1;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab.active {
+            background: white;
+            color: #2575fc;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .calculator-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 800px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .calculator {
+            padding: 30px;
+            display: none;
+        }
+
+        .calculator.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        .calculator h2 {
+            color: #2575fc;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .input-field {
+            flex: 1;
+            position: relative;
+        }
+
+        .input-field input, .input-field select {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .input-field input:focus, .input-field select:focus {
+            border-color: #2575fc;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.2);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 43px;
+            color: #7f8c8d;
+            font-size: 18px;
+        }
+
+        .units {
+            position: absolute;
+            right: 15px;
+            top: 43px;
+            color: #7f8c8d;
+            font-size: 14px;
+            background: #f1f1f1;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #2575fc, #6a11cb);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(37, 117, 252, 0.4);
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(37, 117, 252, 0.5);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .result-container {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border: 2px dashed #2575fc;
+            display: none;
+        }
+
+        .result-container.show {
+            display: block;
+        }
+
+        .result-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2575fc;
+            margin-bottom: 10px;
+        }
+
+        .result-value {
+            font-size: 42px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 10px 0;
+        }
+
+        .result-category {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #27ae60;
+        }
+
+        .result-details {
+            text-align: left;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
+
+        .info-section {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #2575fc;
+        }
+
+        .info-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .info-item {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+
+        .info-item p:first-child {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .input-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                flex: 1 0 45%;
+                margin-bottom: 5px;
+                padding: 12px;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+        }
+
+        footer {
+            color: white;
+            text-align: center;
+            margin-top: auto;
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>Health & Lifestyle Hub</h1>
-    <p class="subtitle">Empower your wellness journey with expert tips, articles & calculators</p>
-  </header>
-  <nav>
-    <a href="index.html" class="active">Home</a>
-    <a href="blog.html">Blog</a>
-    <a href="calculators.html">Calculators</a>
-    <a href="contact.html">Contact</a>
-    <a href="privacy.html">Privacy</a>
-  </nav>
-  <main>
-    <section class="buttons">
-      <a href="calculators.html" class="btn blue">Health Calculators</a>
-      <a href="blog.html" class="btn yellow">Read Articles</a>
-      <a href="contact.html" class="btn red">Contact Us</a>
-      <a href="privacy.html" class="btn">Privacy Policy</a>
-    </section>
-    <section>
-      <h2>Welcome to Your Health & Lifestyle Hub</h2>
-      <p>
-        Discover science-backed articles, easy-to-use health calculators, and actionable tips designed to help you live your healthiest life.
-      </p>
-    </section>
-  </main>
-  <footer>
-    &copy; 2025 Health & Lifestyle Hub
-  </footer>
+    <div class="header">
+        <h1><i class="fas fa-heartbeat"></i> Health Calculators</h1>
+        <p>Calculate your BMI, BMR, Age, Calories, and Body Fat Percentage</p>
+    </div>
+
+    <div class="tabs">
+        <div class="tab active" data-tab="bmi">
+            <i class="fas fa-weight-scale"></i> BMI
+        </div>
+        <div class="tab" data-tab="bmr">
+            <i class="fas fa-heart"></i> BMR
+        </div>
+        <div class="tab" data-tab="age">
+            <i class="fas fa-birthday-cake"></i> Age
+        </div>
+        <div class="tab" data-tab="calories">
+            <i class="fas fa-fire"></i> Calories
+        </div>
+        <div class="tab" data-tab="fat">
+            <i class="fas fa-ruler-combined"></i> Body Fat
+        </div>
+    </div>
+
+    <div class="calculator-container">
+        <!-- BMI Calculator -->
+        <div class="calculator active" id="bmi-calculator">
+            <h2>BMI Calculator</h2>
+            <div class="input-group">
+                <div class="input-row">
+                    <div class="input-field">
+                        <label for="bmi-height">Height</label>
+                        <i class="fas fa-ruler-vertical input-icon"></i>
+                        <input type="number" id="bmi-height" placeholder="Height">
+                        <span class="units">cm</span>
+                    </div>
+                    <div class="input-field">
+                        <label for="bmi-weight">Weight</label>
+                        <i class="fas fa-weight input-icon"></i>
+                        <input type="number" id="bmi-weight" placeholder="Weight">
+                        <span class="units">kg</span>
+                    </div>
+                </div>
+            </div>
+            <button class="calculate-btn" onclick="calculateBMI()">
+                <i class="fas fa-calculator"></i> Calculate BMI
+            </button>
+            
+            <div class="result-container" id="bmi-result">
+                <div class="result-title">Your BMI is:</div>
+                <div class="result-value" id="bmi-value">22.5</div>
+                <div class="result-category" id="bmi-category">Normal weight</div>
+                
+                <div class="info-section">
+                    <h3>BMI Categories</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <p>Underweight</p>
+                            <p>&lt; 18.5</p>
+                        </div>
+                        <div class="info-item">
+                            <p>Normal</p>
+                            <p>18.5 - 24.9</p>
+                        </div>
+                        <div class="info-item">
+                            <p>Overweight</p>
+                            <p>25 - 29.9</p>
+                        </div>
+                        <div class="info-item">
+                            <p>Obesity</p>
+                            <p>30 or greater</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BMR Calculator -->
+        <div class="calculator" id="bmr-calculator">
+            <h2>BMR Calculator</h2>
+            <div class="input-group">
+                <div class="input-row">
+                    <div class="input-field">
+                        <label for="bmr-age">Age</label>
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="number" id="bmr-age" placeholder="Age">
+                    </div>
+                    <div class="input-field">
+                        <label for="bmr-gender">Gender</label>
+                        <i class="fas fa-venus-mars input-icon"></i>
+                        <select id="bmr-gender">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="input-field">
+                        <label for="bmr-height">Height</label>
+                        <i class="fas fa-ruler-vertical input-icon"></i>
+                        <input type="number" id="bmr-height" placeholder="Height">
+                        <span class="units">cm</span>
+                    </div>
+                    <div class="input-field">
+                        <label for="bmr-weight">Weight</label>
+                        <i class="fas fa-weight input-icon"></i>
+                        <input type="number" id="bmr-weight" placeholder="Weight">
+                        <span class="units">kg</span>
+                    </div>
+                </div>
+            </div>
+            <button class="calculate-btn" onclick="calculateBMR()">
+                <i class="fas fa-calculator"></i> Calculate BMR
+            </button>
+            
+            <div class="result-container" id="bmr-result">
+                <div class="result-title">Your Basal Metabolic Rate (BMR) is:</div>
+                <div class="result-value" id="bmr-value">0 calories</div>
+                <div class="result-details">
+                    <p>This is the number of calories your body needs to perform basic life-sustaining functions.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Age Calculator -->
+        <div class="calculator" id="age-calculator">
+            <h2>Age Calculator</h2>
+            <div class="input-group">
+                <div class="input-field">
+                    <label for="birth-date">Date of Birth</label>
+                    <i class="fas fa-calendar-days input-icon"></i>
+                    <input type="date" id="birth-date">
+                </div>
+            </div>
+            <button class="calculate-btn" onclick="calculateAge()">
+                <i class="fas fa-calculator"></i> Calculate Age
+            </button>
+            
+            <div class="result-container" id="age-result">
+                <div class="result-title">Your Age is:</div>
+                <div class="result-value" id="age-value">30 years</div>
+                <div class="result-details" id="age-details"></div>
+            </div>
+        </div>
+
+        <!-- Calorie Calculator -->
+        <div class="calculator" id="calories-calculator">
+            <h2>Calorie Calculator</h2>
+            <div class="input-group">
+                <div class="input-row">
+                    <div class="input-field">
+                        <label for="calorie-age">Age</label>
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="number" id="calorie-age" placeholder="Age">
+                    </div>
+                    <div class="input-field">
+                        <label for="calorie-gender">Gender</label>
+                        <i class="fas fa-venus-mars input-icon"></i>
+                        <select id="calorie-gender">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="input-field">
+                        <label for="calorie-height">Height</label>
+                        <i class="fas fa-ruler-vertical input-icon"></i>
+                        <input type="number" id="calorie-height" placeholder="Height">
+                        <span class="units">cm</span>
+                    </div>
+                    <div class="input-field">
+                        <label for="calorie-weight">Weight</label>
+                        <i class="fas fa-weight input-icon"></i>
+                        <input type="number" id="calorie-weight" placeholder="Weight">
+                        <span class="units">kg</span>
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="input-field">
+                        <label for="activity-level">Activity Level</label>
+                        <i class="fas fa-person-running input-icon"></i>
+                        <select id="activity-level">
+                            <option value="1.2">Sedentary (little or no exercise)</option>
+                            <option value="1.375">Lightly active (light exercise 1-3 days/week)</option>
+                            <option value="1.55">Moderately active (moderate exercise 3-5 days/week)</option>
+                            <option value="1.725">Very active (hard exercise 6-7 days/week)</option>
+                            <option value="1.9">Extra active (very hard exercise, physical job)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button class="calculate-btn" onclick="calculateCalories()">
+                <i class="fas fa-calculator"></i> Calculate Calories
+            </button>
+            
+            <div class="result-container" id="calories-result">
+                <div class="result-title">Your Daily Calorie Needs:</div>
+                <div class="result-value" id="calories-value">2000 kcal</div>
+                <div class="result-details" id="calories-details"></div>
+            </div>
+        </div>
+
+        <!-- Body Fat Calculator -->
+        <div class="calculator" id="fat-calculator">
+            <h2>Body Fat Calculator</h2>
+            <div class="input-group">
+                <div class="input-row">
+                    <div class="input-field">
+                        <label for="fat-age">Age</label>
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="number" id="fat-age" placeholder="Age">
+                    </div>
+                    <div class="input-field">
+                        <label for="fat-gender">Gender</label>
+                        <i class="fas fa-venus-mars input-icon"></i>
+                        <select id="fat-gender">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="input-field">
+                        <label for="fat-height">Height</label>
+                        <i class="fas fa-ruler-vertical input-icon"></i>
+                        <input type="number" id="fat-height" placeholder="Height">
+                        <span class="units">cm</span>
+                    </div>
+                    <div class="input-field">
+                        <label for="fat-weight">Weight</label>
+                        <i class="fas fa-weight input-icon"></i>
+                        <input type="number" id="fat-weight" placeholder="Weight">
+                        <span class="units">kg</span>
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="input-field">
+                        <label for="waist">Waist Circumference</label>
+                        <i class="fas fa-ruler input-icon"></i>
+                        <input type="number" id="waist" placeholder="Waist">
+                        <span class="units">cm</span>
+                    </div>
+                    <div class="input-field">
+                        <label for="neck">Neck Circumference</label>
+                        <i class="fas fa-ruler input-icon"></i>
+                        <input type="number" id="neck" placeholder="Neck">
+                        <span class="units">cm</span>
+                    </div>
+                </div>
+            </div>
+            <button class="calculate-btn" onclick="calculateBodyFat()">
+                <i class="fas fa-calculator"></i> Calculate Body Fat
+            </button>
+            
+            <div class="result-container" id="fat-result">
+                <div class="result-title">Your Body Fat Percentage:</div>
+                <div class="result-value" id="fat-value">20%</div>
+                <div class="result-category" id="fat-category">Healthy</div>
+                
+                <div class="info-section">
+                    <h3>Body Fat Categories</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <p>Essential Fat</p>
+                            <p>Men: 2-5%, Women: 10-13%</p>
+                        </div>
+                        <div class="info-item">
+                            <p>Athletes</p>
+                            <p>Men: 6-13%, Women: 14-20%</p>
+                        </div>
+                        <div class="info-item">
+                            <p>Fitness</p>
+                            <p>Men: 14-17%, Women: 21-24%</p>
+                        </div>
+                        <div class="info-item">
+                            <p>Average</p>
+                            <p>Men: 18-24%, Women: 25-31%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Health Calculators Suite &copy; 2023 | All calculations are estimates</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and calculators
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.calculator').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                tab.classList.add('active');
+                
+                // Show corresponding calculator
+                const calculatorId = `${tab.dataset.tab}-calculator`;
+                document.getElementById(calculatorId).classList.add('active');
+            });
+        });
+
+        // BMI Calculator
+        function calculateBMI() {
+            let height = parseFloat(document.getElementById('bmi-height').value);
+            let weight = parseFloat(document.getElementById('bmi-weight').value);
+            
+            if (!height || !weight || height <= 0 || weight <= 0) {
+                alert('Please enter valid height and weight values.');
+                return;
+            }
+            
+            // Calculate BMI (weight (kg) / (height (m) * height (m)))
+            const heightInMeters = height / 100;
+            const bmi = weight / (heightInMeters * heightInMeters);
+            
+            // Determine category
+            let category = '';
+            if (bmi < 18.5) {
+                category = 'Underweight';
+            } else if (bmi < 25) {
+                category = 'Normal weight';
+            } else if (bmi < 30) {
+                category = 'Overweight';
+            } else {
+                category = 'Obesity';
+            }
+            
+            // Update UI
+            document.getElementById('bmi-value').textContent = bmi.toFixed(1);
+            document.getElementById('bmi-category').textContent = category;
+            document.getElementById('bmi-result').classList.add('show');
+        }
+
+        // BMR Calculator
+        function calculateBMR() {
+            const age = parseInt(document.getElementById('bmr-age').value);
+            const gender = document.getElementById('bmr-gender').value;
+            const height = parseFloat(document.getElementById('bmr-height').value);
+            const weight = parseFloat(document.getElementById('bmr-weight').value);
+            
+            if (!age || !height || !weight || age <= 0 || height <= 0 || weight <= 0) {
+                alert('Please enter valid values.');
+                return;
+            }
+            
+            // Calculate BMR (Mifflin-St Jeor Equation)
+            let bmr;
+            if (gender === 'male') {
+                bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+            } else {
+                bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+            }
+            
+            // Update UI
+            document.getElementById('bmr-value').textContent = Math.round(bmr) + ' calories';
+            document.getElementById('bmr-result').classList.add('show');
+        }
+
+        // Age Calculator
+        function calculateAge() {
+            const birthDate = new Date(document.getElementById('birth-date').value);
+            const today = new Date();
+            
+            if (isNaN(birthDate.getTime())) {
+                alert('Please enter a valid date of birth.');
+                return;
+            }
+            
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            // Calculate exact age in years, months and days
+            let months = today.getMonth() - birthDate.getMonth();
+            let days = today.getDate() - birthDate.getDate();
+            
+            if (days < 0) {
+                months--;
+                // Days in previous month
+                const lastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                days += lastMonth.getDate();
+            }
+            
+            if (months < 0) {
+                months += 12;
+            }
+            
+            // Update UI
+            document.getElementById('age-value').textContent = `${age} years`;
+            document.getElementById('age-details').innerHTML = `
+                <p>Exactly: ${age} years, ${months} months, and ${days} days</p>
+                <p>Next birthday in: ${11 - months} months and ${30 - days} days (approx)</p>
+            `;
+            document.getElementById('age-result').classList.add('show');
+        }
+
+        // Calorie Calculator
+        function calculateCalories() {
+            const age = parseInt(document.getElementById('calorie-age').value);
+            const gender = document.getElementById('calorie-gender').value;
+            let height = parseFloat(document.getElementById('calorie-height').value);
+            let weight = parseFloat(document.getElementById('calorie-weight').value);
+            const activityLevel = parseFloat(document.getElementById('activity-level').value);
+            
+            if (!age || !height || !weight || age <= 0 || height <= 0 || weight <= 0) {
+                alert('Please enter valid values.');
+                return;
+            }
+            
+            // Calculate BMR (Mifflin-St Jeor Equation)
+            let bmr;
+            if (gender === 'male') {
+                bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+            } else {
+                bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+            }
+            
+            // Apply activity level
+            const calories = Math.round(bmr * activityLevel);
+            
+            // Update UI
+            document.getElementById('calories-value').textContent = `${calories} kcal`;
+            document.getElementById('calories-details').innerHTML = `
+                <p>Basal Metabolic Rate (BMR): ${Math.round(bmr)} kcal</p>
+                <p>Maintenance calories: ${calories} kcal</p>
+                <p>Mild weight loss (0.25 kg/week): ${calories - 250} kcal</p>
+                <p>Weight loss (0.5 kg/week): ${calories - 500} kcal</p>
+            `;
+            document.getElementById('calories-result').classList.add('show');
+        }
+
+        // Body Fat Calculator
+        function calculateBodyFat() {
+            const age = parseInt(document.getElementById('fat-age').value);
+            const gender = document.getElementById('fat-gender').value;
+            let height = parseFloat(document.getElementById('fat-height').value);
+            let weight = parseFloat(document.getElementById('fat-weight').value);
+            let waist = parseFloat(document.getElementById('waist').value);
+            let neck = parseFloat(document.getElementById('neck').value);
+            
+            if (!age || !height || !weight || !waist || !neck || 
+                age <= 0 || height <= 0 || weight <= 0 || waist <= 0 || neck <= 0) {
+                alert('Please enter valid values.');
+                return;
+            }
+            
+            // Calculate body fat percentage (US Navy Method)
+            let bodyFat;
+            if (gender === 'male') {
+                bodyFat = 495 / (1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(height)) - 450;
+            } else {
+                // For females we would need hip measurement as well
+                // This is a simplified version
+                bodyFat = 495 / (1.29579 - 0.35004 * Math.log10(waist + neck) + 0.22100 * Math.log10(height)) - 450;
+            }
+            
+            // Determine category
+            let category = '';
+            if (gender === 'male') {
+                if (bodyFat < 6) category = 'Essential fat';
+                else if (bodyFat < 14) category = 'Athlete';
+                else if (bodyFat < 18) category = 'Fitness';
+                else if (bodyFat < 25) category = 'Average';
+                else category = 'Obese';
+            } else {
+                if (bodyFat < 14) category = 'Essential fat';
+                else if (bodyFat < 21) category = 'Athlete';
+                else if (bodyFat < 25) category = 'Fitness';
+                else if (bodyFat < 32) category = 'Average';
+                else category = 'Obese';
+            }
+            
+            // Update UI
+            document.getElementById('fat-value').textContent = `${bodyFat.toFixed(1)}%`;
+            document.getElementById('fat-category').textContent = category;
+            document.getElementById('fat-result').classList.add('show');
+        }
+    </script>
 </body>
 </html>
